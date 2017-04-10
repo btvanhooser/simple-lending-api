@@ -16,5 +16,5 @@ If you would like a basic run-down of the functionality of this application, ple
 To run the application, please simply enter the following command after installing the above libraries. 
 
 ```
-python app.py
+python run.py
 ```
