@@ -78,7 +78,7 @@ class ApplicationModel(db.Model):
     
     @classmethod    
     def find_by_lender(cls, lendercode):
-        return list(map(lambda x: x.json(), cls.query.filter_by(lendercode=lendercode).order_by(cls.id.desc()).all()))
+        return list(map(lambda x: {"id": x.id, "firstname": x.firstname, "lastname": x.lastname}, cls.query.with_entities(cls.id, cls.firstname, cls.lastname).filter_by(lendercode=lendercode).order_by(cls.id.desc()).all()))
         
     def json(self):
         return {
