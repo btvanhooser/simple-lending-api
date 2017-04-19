@@ -18,12 +18,19 @@ def create_tables():
         lender.save_to_db()
         lender = LenderModel('Software Developer Credit Union', '111')
         lender.save_to_db()
-        lender = LenderModel('Orange County Credit Unionr', '222')
+        lender = LenderModel('Orange County Credit Union', '222')
         lender.save_to_db()
         lender = LenderModel('Southern California Credit Union', '333')
         lender.save_to_db()
 
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Origin', '*')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  return response
+
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8080))
     host = os.getenv('IP', '0.0.0.0')
-    app.run(host=host,port=port)
+    app.run(host=host,port=port, debug=True)

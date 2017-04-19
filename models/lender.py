@@ -17,6 +17,10 @@ class LenderModel(db.Model):
         return cls.query.filter_by(lendercode=lendercode).first()
         
     @classmethod
+    def find_by_id(cls, _id):
+        return cls.query.filter_by(id=_id).first()
+        
+    @classmethod
     def grab_all_lenders(cls):
         return list(map(lambda x: x.json(), cls.query.all()))
         
@@ -25,8 +29,8 @@ class LenderModel(db.Model):
         db.session.commit()
         
     def delete_from_db(self):
-        db.session.delete()
+        db.session.delete(self)
         db.session.commit()
         
     def json(self):
-        return {"name": self.name, "lendercode": self.lendercode}
+        return {"id": self.id, "name": self.name, "lendercode": self.lendercode}

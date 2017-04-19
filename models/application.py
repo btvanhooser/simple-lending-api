@@ -43,34 +43,34 @@ class ApplicationModel(db.Model):
     
     def delete_from_db(self):
         db.session.delete(self)
-        db.session.commmit()
+        db.session.commit()
     
     def getNewStatus(self):
-        if safe_str_cmp(self.incomeFrequency, 'monthly'):
+        if safe_str_cmp(self.incomeFrequency, 'Monthly'):
             monthlyIncome = self.income
-        elif safe_str_cmp(self.incomeFrequency, 'yearly'):
+        elif safe_str_cmp(self.incomeFrequency, 'Yearly'):
             monthlyIncome = self.income/12
-        elif safe_str_cmp(self.incomeFrequency, 'biweekly'):
+        elif safe_str_cmp(self.incomeFrequency, 'Bi-Weekly'):
             monthlyIncome = self.income*2
         else:
             monthlyIncome = self.income*4
         
         monthlyCost = self.requestedAmount * 1.0/self.requestedTerm
         
-        if (safe_str_cmp(self.isBranchEmployee, 'yes')) and (self.employeeID > 100 and self.employeeID < 999):
+        if (safe_str_cmp(self.isBranchEmployee, 'yes')) and (self.employeeID >= 100 and self.employeeID <= 999):
             if monthlyCost < (monthlyIncome * .15):
                 self.status = 'Approved'
             elif monthlyCost < (monthlyIncome * .25):
                 self.status = 'Refer'
             else:
-                self.status = 'Decline'
+                self.status = 'Declined'
         else:
             if monthlyCost < (monthlyIncome * .10):
                 self.status = 'Approved'
             elif monthlyCost < (monthlyIncome * .18):
                 self.status = 'Refer'
             else:
-                self.status = 'Decline'
+                self.status = 'Declined'
     
     @classmethod
     def find_by_id(cls, _id):
@@ -78,8 +78,21 @@ class ApplicationModel(db.Model):
     
     @classmethod    
     def find_by_lender(cls, lendercode):
-        return list(map(lambda x: {"id": x.id, "firstname": x.firstname, "lastname": x.lastname}, cls.query.with_entities(cls.id, cls.firstname, cls.lastname).filter_by(lendercode=lendercode).order_by(cls.id.desc()).all()))
+        return list(map(lambda x: {"id": x.id, "firstname": x.firstname, "lastname": x.lastname, "status": x.status}, cls.query.with_entities(cls.id, cls.firstname, cls.lastname, cls.status).filter_by(lendercode=lendercode).order_by(cls.id.desc()).all()))
         
+    @classmethod
+    def find_by_lastname(cls, lendercode, lastname):
+        return list(map(lambda x: {"id": x.id, "firstname": x.firstname, "lastname": x.lastname, "status": x.status}, cls.query.with_entities(cls.id, cls.firstname, cls.lastname, cls.status).filter_by(lendercode=lendercode, lastname=lastname).order_by(cls.id.desc()).all()))
+        
+    @classmethod
+    def find_by_fullname(cls, lendercode, lastname, firstname):
+        return list(map(lambda x: {"id": x.id, "firstname": x.firstname, "lastname": x.lastname, "status": x.status}, cls.query.with_entities(cls.id, cls.firstname, cls.lastname, cls.status).filter_by(lendercode=lendercode, firstname=firstname, lastname=lastname).order_by(cls.id.desc()).all()))
+        
+    @classmethod
+    def delete_all_by_lendercode(cls, lendercode):
+        map(lambda x: x.delete_from_db(), cls.query.filter_by(lendercode=lendercode).all())
+        return
+    
     def json(self):
         return {
             "id": self.id,

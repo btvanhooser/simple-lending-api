@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required, current_identity
 from models.application import ApplicationModel
+from werkzeug.security import safe_str_cmp
 
 class Application(Resource):
     
@@ -8,7 +9,7 @@ class Application(Resource):
     parser.add_argument('id',
         type=int,
         required=False,
-        help="This field is not required"
+        help="This field is not required."
     )
     parser.add_argument('firstname',
         type=str,
@@ -75,22 +76,27 @@ class Application(Resource):
         required=True,
         help="This field cannot be blank."
     )
+    parser.add_argument('status',
+        type=str,
+        required=False,
+        help="This field is not required."
+    )
     
     
     @jwt_required()
     def get(self, _id):
         application = ApplicationModel.find_by_id(_id)
-        if current_identity.lendercode != '000' and current_identity.lendercode != application.lendercode:
+        if not safe_str_cmp(current_identity.lendercode,'000') and safe_str_cmp(current_identity.lendercode, application.lendercode):
             return {'Message': "You do not have access to that application. Application lendercode: {} and User lendercode: {}".format(application.lendercode, current_identity.lendercode)}, 401
         
         if application:
-            return application.json(), 200
+            return {'Application': application.json()}, 200
         return {"Message": "No application found with that ID."}, 404
         
     @jwt_required()
     def post(self):
         data = Application.parser.parse_args()
-        if current_identity.lendercode != '000' and current_identity.lendercode != data['lendercode']:
+        if not safe_str_cmp(current_identity.lendercode, '000') and not safe_str_cmp(current_identity.lendercode, '1') and not safe_str_cmp(current_identity.lendercode, data['lendercode']):
             return {'Message': "You do not have access to submit to that lender. Application lendercode: {} and User lendercode: {}".format(data['lendercode'], current_identity.lendercode)}, 401
         
         appData = (
@@ -120,7 +126,7 @@ class Application(Resource):
         application = ApplicationModel.find_by_id(data['id'])
         if application == None:
             return {'Message': "Application with id of '{}' does not exist.".format(data['id'])}, 404
-        if current_identity.lendercode != '000' and current_identity.lendercode != application.lendercode:
+        if not safe_str_cmp(current_identity.lendercode, '000') and not safe_str_cmp(current_identity.lendercode, application.lendercode):
             return {'Message': "You do not have access to that application. Application lendercode: {} and User lendercode: {}".format(application.lendercode, current_identity.lendercode)}, 401
         
         application.firstname = data['firstname']
@@ -138,16 +144,20 @@ class Application(Resource):
         application.lendercode = data['lendercode']
         application.status = "Re-Submitted"
         
-        application.getNewStatus()
+        if data['status']:
+            application.status = data['status']
+        else:
+            application.getNewStatus()
+            
         application.save_to_db()
         return {'Message': 'Application re-submitted successfully.', 'Application': application.json()}, 200
         
     @jwt_required()
     def delete(self, _id):
         application = ApplicationModel.find_by_id(_id)
-        if application == None:
+        if application is None:
             return {'Message': "Application with id of '{}' does not exist.".format(_id)}, 404
-        if current_identity.lendercode != '000' and current_identity.lendercode != application.lendercode:
+        if not safe_str_cmp(current_identity.lendercode, '000') and not safe_str_cmp(current_identity.lendercode, application.lendercode):
             return {'Message': "You do not have access to that application. Application lendercode: {} and User lendercode: {}".format(application.lendercode, current_identity.lendercode)}, 401
         
         if application:
@@ -156,10 +166,26 @@ class Application(Resource):
         return {'Message': 'Application deleted.'}, 200
             
         
-class Applications(Resource):
+class ApplicationsByLender(Resource):
     @jwt_required()
     def get(self, code):
-        if current_identity.lendercode != '000' and current_identity.lendercode != code:
+        if not safe_str_cmp(current_identity.lendercode, '000') and not safe_str_cmp(current_identity.lendercode, code):
             return {'Message': "You do not have access to those applications. Attempted lendercode: {} and User lendercode: {}".format(code, current_identity.lendercode)}, 401
-            
-        return {'Results': ApplicationModel.find_by_lender(code)}
+        
+        return {'Applications': ApplicationModel.find_by_lender(code)}, 200
+        
+class ApplicationsByLastname(Resource):
+    @jwt_required()
+    def get(self, code, lastname):
+        if not safe_str_cmp(current_identity.lendercode, '000') and not safe_str_cmp(current_identity.lendercode, code):
+            return {'Message': "You do not have access to those applications. Attempted lendercode: {} and User lendercode: {}".format(code, current_identity.lendercode)}, 401
+        
+        return {'Applications': ApplicationModel.find_by_lastname(code, lastname)}, 200
+        
+class ApplicationsByFullname(Resource):
+    @jwt_required()
+    def get(self, code, lastname, firstname):
+        if not safe_str_cmp(current_identity.lendercode, '000') and not safe_str_cmp(current_identity.lendercode, code):
+            return {'Message': "You do not have access to those applications. Attempted lendercode: {} and User lendercode: {}".format(code, current_identity.lendercode)}, 401
+        
+        return {'Applications': ApplicationModel.find_by_fullname(code, lastname, firstname)}, 200
