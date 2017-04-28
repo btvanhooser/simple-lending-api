@@ -20,6 +20,9 @@ To run the application, please simply enter the following command after installi
 ```
 python run.py
 ```
+
+<h3><b>Please be sure and go through and replace the uri's with your own uri's for each project after downloading. On C# projects, this is marked by a TODO and can be seen via the Task List on Visual Studio. On the web app, this is found on the Script.js file within the project.</b></h3>
+
 <h2>
     Other related github repositories:
 </h2>
