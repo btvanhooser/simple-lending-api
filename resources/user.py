@@ -32,12 +32,12 @@ class UserRegister(Resource):
         data = UserRegister.parser.parse_args()
         
         if UserModel.find_by_username(data['username']):
-            return {"message": "User already exists!"}, 400
+            return {"Message": "User already exists!"}, 400
         
         user = UserModel(data['username'], data['password'], data['lendercode'])
         user.save_to_db()
         
-        return {"message": "User created successfully."}, 201
+        return {"Message": "User created successfully."}, 201
     
     @jwt_required()
     def put(self):
