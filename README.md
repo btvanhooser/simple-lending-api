@@ -32,4 +32,16 @@ python run.py
 </ul>
 
 <h2>Postman Collection for API Testing</h2>
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/290e4ea8841a7580e1dc#?env%5BHeroku%5D=W3siZW5hYmxlZCI6dHJ1ZSwia2V5IjoibGVuZGluZy1iYXNlLXVybCIsInZhbHVlIjoiaHR0cHM6Ly9zaW1wbGUtbGVuZGluZy1hcGkuaGVyb2t1YXBwLmNvbSIsInR5cGUiOiJ0ZXh0In0seyJlbmFibGVkIjp0cnVlLCJrZXkiOiJqd3RfdG9rZW4iLCJ2YWx1ZSI6ImV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpwWkdWdWRHbDBlU0k2TVN3aWJtSm1Jam94TkRrek1EQXhNREUzTENKcFlYUWlPakUwT1RNd01ERXdNVGNzSW1WNGNDSTZNVFE1TXpBd05EWXhOMzAubFZJTm9HRHJwMXZwX1V6eVNzN3k4cWN3RXo1U2tXSldMQ01VNjZUWHYxcyIsInR5cGUiOiJ0ZXh0In1d)
+<div class="postman-run-button"
+data-postman-action="collection/import"
+data-postman-var-1="290e4ea8841a7580e1dc"
+data-postman-param="env%5BHeroku%5D=W3siZW5hYmxlZCI6dHJ1ZSwia2V5IjoibGVuZGluZy1iYXNlLXVybCIsInZhbHVlIjoiaHR0cHM6Ly9zaW1wbGUtbGVuZGluZy1hcGkuaGVyb2t1YXBwLmNvbSIsInR5cGUiOiJ0ZXh0In0seyJlbmFibGVkIjp0cnVlLCJrZXkiOiJqd3RfdG9rZW4iLCJ2YWx1ZSI6ImV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpwWkdWdWRHbDBlU0k2TVN3aWJtSm1Jam94TkRrek1EQXhNREUzTENKcFlYUWlPakUwT1RNd01ERXdNVGNzSW1WNGNDSTZNVFE1TXpBd05EWXhOMzAubFZJTm9HRHJwMXZwX1V6eVNzN3k4cWN3RXo1U2tXSldMQ01VNjZUWHYxcyIsInR5cGUiOiJ0ZXh0In1d"></div>
+<script type="text/javascript">
+  (function (p,o,s,t,m,a,n) {
+    !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });
+    !o.getElementById(s+t) && o.getElementsByTagName("head")[0].appendChild((
+      (n = o.createElement("script")),
+      (n.id = s+t), (n.async = 1), (n.src = m), n
+    ));
+  }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
+</script>
