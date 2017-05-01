@@ -86,7 +86,7 @@ class Application(Resource):
     @jwt_required()
     def get(self, _id):
         application = ApplicationModel.find_by_id(_id)
-        if not safe_str_cmp(current_identity.lendercode,'000') and safe_str_cmp(current_identity.lendercode, application.lendercode):
+        if not safe_str_cmp(current_identity.lendercode,'000') and not safe_str_cmp(current_identity.lendercode, application.lendercode):
             return {'Message': "You do not have access to that application. Application lendercode: {} and User lendercode: {}".format(application.lendercode, current_identity.lendercode)}, 401
         
         if application:
